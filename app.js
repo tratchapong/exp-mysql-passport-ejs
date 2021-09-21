@@ -33,20 +33,20 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use("/todos", todoRoute)
-app.use("/users", userRoute)
+app.use("/todos", checkAuth, todoRoute)
+app.use("/users", checkAuth, userRoute)
 
-app.get("/login", userController.login)
+app.get("/login", checkNoAuth, userController.login)
 
 app.post("/login", passport.authenticate('local', {
   successRedirect: '/',
   failureRedirect: '/login',
   failureFlash: true
 }))
-app.get("/register", userController.register)
+app.get("/register", checkNoAuth,userController.register)
 app.post("/register", userController.postRegister)
 
-app.get("/", async (req, res) => {
+app.get("/", checkAuth, async (req, res) => {
   res.render('index.ejs', {name: 'CodeCamp9'})
 });
 
@@ -55,6 +55,20 @@ app.use((err,req,res,next) => {
   console.log(err)
   console.log('******************')
 })
+
+function checkAuth(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+  res.redirect('/login')
+}
+
+function checkNoAuth(req,res,next) {
+  if (req.isAuthenticated()) {
+    res.redirect('/')
+  }
+  return next()
+}
 
 app.listen(8080, () => console.log("Server on 8080..."));
 
