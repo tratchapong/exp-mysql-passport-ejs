@@ -1,5 +1,6 @@
 const {pool, exec } = require('../db/dbcon')
 const bcrypt = require('bcrypt')
+const passport = require('passport')
 
 exports.getAllUsers = async (req, res, next) => {
   let [rows] = await exec('SELECT * FROM users',[])
@@ -8,10 +9,6 @@ exports.getAllUsers = async (req, res, next) => {
 
 exports.login = (req, res, next) => {
   res.render('login.ejs')
-}
-
-exports.postLogin = (req, res, next) => {
-  res.json({msg: 'in postLogin'})
 }
 
 exports.register = (req, res, next) => {
