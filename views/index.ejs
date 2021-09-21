@@ -21,6 +21,11 @@
         <li><a href="/register">Register</a></li>
         <li><a href="/login">Login</a></li>
         <li><a href="/">Welcome</a></li>
+        <li>
+          <form action="/logout?_method=DELETE" method="POST">
+            <button type="submit">Logout</button>
+          </form>
+        </li>
       </ul>
     </nav>
     <h1>Hi!!! <%= name %> </h1>

@@ -9,6 +9,7 @@ const userRoute = require('./routes/userRoute')
 const userController = require('./controllers/userController')
 const initPassport = require('./auth/passport-config')
 const {pool, exec} = require('./db/dbcon')
+const methodOverride = require('method-override')
 
 initPassport(passport,
     async email => {
@@ -32,6 +33,7 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(methodOverride('_method'))
 
 app.use("/todos", checkAuth, todoRoute)
 app.use("/users", checkAuth, userRoute)
@@ -45,6 +47,11 @@ app.post("/login", passport.authenticate('local', {
 }))
 app.get("/register", checkNoAuth,userController.register)
 app.post("/register", userController.postRegister)
+
+app.delete("/logout", (req, res, next)=>{
+  req.logOut()
+  res.redirect('/login')
+})
 
 app.get("/", checkAuth, async (req, res) => {
   res.render('index.ejs', {name: 'CodeCamp9'})
