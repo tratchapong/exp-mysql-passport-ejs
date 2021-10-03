@@ -1,7 +1,20 @@
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
+const {exec} = require('../db/dbcon')
 
-function initialize(passport, getUserByEmail, getUserById) {
+
+  async function getUserByEmail(email) {
+    let [rs] = await exec('SELECT * FROM users WHERE email=?', [email])
+    return rs
+  }
+
+  async function getUserById(id) {
+    let [rs] = await exec('SELECT * FROM users WHERE id=?', [id])
+    return rs
+  }
+
+
+function initialize(passport) {
 
   const authenticateUser = async (email, password, done) => {
     const user = await getUserByEmail(email)

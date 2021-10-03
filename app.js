@@ -1,27 +1,20 @@
 require('dotenv').config()
 const express = require("express");
 const app = express();
-const passport = require('passport')
 const session = require('express-session')
 const flash = require('express-flash')
 const todoRoute = require('./routes/todoRoute')
 const userRoute = require('./routes/userRoute')
 const userController = require('./controllers/userController')
-const initPassport = require('./auth/passport-config')
-const {pool, exec} = require('./db/dbcon')
+
+const passport = require('passport')
+// require('./auth/passport-config')(passport)
+const init = require('./auth/passport-config')
+init(passport)
+
 const methodOverride = require('method-override')
 
-initPassport(passport,
-    async email => {
-      let [rs] = await exec('SELECT * FROM users WHERE email=?', [email])
-      return rs
-    },
-    async id => {
-      let [rs] = await exec('SELECT * FROM users WHERE id=?', [id])
-      return rs
-    },
-  )
-
+// initialize(passport)
 app.set('view engine', 'ejs')
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
@@ -67,14 +60,14 @@ function checkAuth(req, res, next) {
   if (req.isAuthenticated()) {
     return next()
   }
-  res.redirect('/login')
+  else res.redirect('/login')
 }
 
 function checkNoAuth(req,res,next) {
   if (req.isAuthenticated()) {
     res.redirect('/')
   }
-  return next()
+  else return next()
 }
 
 app.listen(8080, () => console.log("Server on 8080..."));
