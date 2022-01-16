@@ -8,13 +8,12 @@ const userRoute = require('./routes/userRoute')
 const userController = require('./controllers/userController')
 
 const passport = require('passport')
-// require('./auth/passport-config')(passport)
-const init = require('./auth/passport-config')
-init(passport)
+require('./auth/passport-config')(passport)
+// const init = require('./auth/passport-config')
+// init(passport)
 
 const methodOverride = require('method-override')
 
-// initialize(passport)
 app.set('view engine', 'ejs')
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
